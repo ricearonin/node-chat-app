@@ -18,14 +18,17 @@ socket.on('newMessage', function(message) {
 });
 
 jQuery('#message-form').on('submit', function(e) {
+  var messageTextbox = jQuery('[name=message]');
   e.preventDefault();
 
   socket.emit(
     'createMessage',
     {
       from: 'User',
-      text: jQuery('[name=message]').val(),
+      text: messageTextbox.val(),
     },
-    function() {},
+    function() {
+      messageTextbox.val('');
+    },
   );
 });
