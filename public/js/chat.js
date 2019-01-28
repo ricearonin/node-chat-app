@@ -17,7 +17,16 @@ function scrollToBottom() {
 }
 
 socket.on('connect', function() {
-  console.log('connected to server');
+  var params = jQuery.deparam(window.location.search);
+
+  socket.emit('join', params, function(err) {
+    if (err) {
+      alert(err);
+      window.location.href = '/';
+    } else {
+      console.log('no error');
+    }
+  });
 });
 
 socket.on('disconnect', function() {
@@ -40,11 +49,11 @@ socket.on('newMessage', function(message) {
 jQuery('#message-form').on('submit', function(e) {
   var messageTextbox = jQuery('[name=message]');
   e.preventDefault();
-
+  var params = jQuery.deparam(window.location.search);
   socket.emit(
     'createMessage',
     {
-      from: 'User',
+      from: params.name,
       text: messageTextbox.val(),
     },
     function() {
